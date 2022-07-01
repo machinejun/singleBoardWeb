@@ -51,5 +51,11 @@ public class Board {
 	
 	@OneToMany(mappedBy = "board", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
 	private List<Reply> replys;
+	
+	@Column(length = 1)
+	@ColumnDefault("0")
+	private int secret;
+	
+	private String password;
 
 }

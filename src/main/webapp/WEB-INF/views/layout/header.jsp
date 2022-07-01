@@ -1,5 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix= "c" uri ="http://java.sun.com/jsp/jstl/core" %>
+
+<sec:authorize access="isAuthenticated()">
+	<sec:authentication property="principal" var="principal"/>
+</sec:authorize>
+   
 
 <!DOCTYPE html>
 
@@ -23,7 +30,9 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
     <!-- Latest compiled JavaScript -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-  <link href="../css/shop-homepage.css" rel="stylesheet">
+  <link href="/css/shop-homepage.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
 
 </head>
 
@@ -42,16 +51,22 @@
           <li class="nav-item">
             <a class="nav-link" href="/">Home</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/user/loginform">로그인</a>
-            <span class="sr-only">(current)</span>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/user/joinform">회원가입</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">로그아웃</a>
-          </li>
+          <c:choose>
+	          <c:when test="${empty principal}">
+	          	<li class="nav-item">
+	            	<a class="nav-link" href="/auth/loginform">로그인</a>
+	            	<span class="sr-only">(current)</span>
+	          	</li>
+	          	<li class="nav-item">
+	            	<a class="nav-link" href="/auth/joinform">회원가입</a>
+	          	</li>
+	          </c:when>
+	          <c:otherwise>
+	          	<li class="nav-item">
+	            	<a class="nav-link" href="/user/logout">로그아웃</a>
+	          	</li>
+	          </c:otherwise>            
+          </c:choose>
         </ul>
       </div>
     </div>

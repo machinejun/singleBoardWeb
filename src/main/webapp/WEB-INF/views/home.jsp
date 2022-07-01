@@ -1,51 +1,76 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="layout/header.jsp" %>
-
+<c:set var="islogin" value=""/>
+<c:set var="isNotlogin" value="disabled"/>
   <!-- Page Content -->
-  <div class="container">
 
-    <div class="row">
-
-      <div class="col-lg-3">
-
-        <h1 class="my-4">Junic blog</h1>
-        <div class="list-group">
-          <a href="/board/write" class="list-group-item">글쓰기</a>
+<section class="notice">
+  <div class="page-title">
+        <div class="container">
+            <h3>게시판</h3>
         </div>
-
-      </div>
-      <!-- /.col-lg-3 -->
-
-      <div class="col-lg-9">
-		<br/><br/>
-        <div class="row">
-
-          <div class="col-lg-4 col-md-6 mb-4">
-            <div class="card h-100">
-              <div class="card-body">
-                <h4 class="card-title">
-                  <a href="#">게시판 제목</a>
-                </h4>
-                <h5>조회수: </h5>     
-              </div>
-              <div class="card-footer">
-                <p class="card-text">createTime: </p>
-              </div>
-            </div>
-          </div>
-          
-          
-        </div>
-        <!-- /.row -->
-
-      </div>
-      <!-- /.col-lg-9 -->
-
     </div>
-    <!-- /.row -->
 
-  </div>
-  <!-- /.container -->
-
+    <!-- board seach area -->
+    <div id="board-search">
+        <div class="container">
+            <div class="search-window">
+                <form action="">
+                    <div class="search-wrap">
+                        <label for="search" class="blind">공지사항 내용 검색</label>
+                        <input id="search" type="search" name="" placeholder="검색어를 입력해주세요." value="">
+                        <button type="submit" class="btn btn-dark">검색</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+   
+  <!-- board list area -->
+    <div id="board-list">
+        <div class="container">
+            <table class="board-table">
+                <thead>
+                <tr>
+                    <th scope="col" class="th-num">번호</th>
+                    <th scope="col" class="th-title">제목</th>
+                    <th scope="col" class="th-date">등록일</th>
+                </tr>
+                </thead>
+                <tbody>
+	                <c:forEach var="board" items="${boards.content}">
+						<c:choose>
+							<c:when test="${board.secret eq 1 }">
+				                <tr>
+				                    <td>${board.id }</td>
+				                    <th>
+				                      <a onclick="showDetail(${board.id}, ${board.secret}, ${board.password})"><img id="card-img" src="/images/secret.png"/>${board.title }</a>
+				                      <p>테스트</p>
+				                    </th>
+				                    <td>${board.createTime}</td>
+				                </tr>
+				
+				            </c:when>
+				            <c:otherwise>
+				            	<tr>
+				                    <td>${board.id }</td>
+				                    <th>
+				                      <a onclick="showDetail(${board.id}, ${board.secret}, ${board.password})" >${board.title }</a>
+				                      <p>테스트</p>
+				                    </th>
+				                    <td>${board.createTime}</td>
+				                </tr>
+				            </c:otherwise>    
+	                	</c:choose>
+					</c:forEach>
+                </tbody>
+            </table>
+            <button id="btn-write" class="btn btn-dark m-2 ${principal.username eq null ? isNotlogin : islogin}">글쓰기</button>
+    	</div>
+    </div>
+</section>  
+  
+    
+<script src="/js/board.js"></script>
 <%@ include file="layout/footer.jsp" %>

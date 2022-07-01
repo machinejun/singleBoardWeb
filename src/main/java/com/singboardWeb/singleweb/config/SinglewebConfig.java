@@ -18,6 +18,8 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 
+import com.singboardWeb.singleweb.auth.PricipalUserService;
+
 
 
 @Configuration
@@ -25,9 +27,18 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SinglewebConfig extends WebSecurityConfigurerAdapter{
 	
+	@Autowired
+	private PricipalUserService pricipalUserService;
+	
 	@Bean     //Ioc가 된다 필요할 때 가져와서 쓰면 된다.
 	public BCryptPasswordEncoder encodePWD() {
 		return new BCryptPasswordEncoder();
+	}
+	
+	
+	@Override
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+		auth.userDetailsService(pricipalUserService).passwordEncoder(encodePWD());
 	}
 	
 
@@ -36,7 +47,7 @@ public class SinglewebConfig extends WebSecurityConfigurerAdapter{
 	protected void configure(HttpSecurity http) throws Exception {
 		http.csrf().disable()
 		.authorizeRequests() 
-		.antMatchers("/","/js/**","/css/**", "/image/**" ,"/auth/**", "/dummy/**").permitAll() 
+		.antMatchers("/","/js/**","/css/**", "/images/**" ,"/auth/**", "/test/**").permitAll() 
 		.anyRequest().authenticated() 
 		.and()
 		.formLogin()
