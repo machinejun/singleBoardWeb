@@ -1,5 +1,7 @@
 package com.singboardWeb.singleweb.service;
 
+import java.util.NoSuchElementException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -35,6 +37,15 @@ public class UserService {
 		return user;
 	}
 	
+	@Transactional
+	public void saveKakaoUser(User user) {
+		try {
+			User userEntity = userRepository.findByUsername(user.getUsername()).orElseThrow(() -> {
+				return new NoSuchElementException();
+			});
+		}catch (NoSuchElementException e) {
+			userRepository.save(user);
+		}
+	}
 	
-
 }

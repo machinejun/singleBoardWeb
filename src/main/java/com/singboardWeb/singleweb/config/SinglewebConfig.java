@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -30,11 +31,17 @@ public class SinglewebConfig extends WebSecurityConfigurerAdapter{
 	@Autowired
 	private PricipalUserService pricipalUserService;
 	
-	@Bean     //Ioc가 된다 필요할 때 가져와서 쓰면 된다.
+	@Bean 
 	public BCryptPasswordEncoder encodePWD() {
 		return new BCryptPasswordEncoder();
 	}
 	
+	@Bean
+	@Override
+	public AuthenticationManager authenticationManagerBean() throws Exception {
+
+		return super.authenticationManagerBean();
+	}
 	
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -47,7 +54,7 @@ public class SinglewebConfig extends WebSecurityConfigurerAdapter{
 	protected void configure(HttpSecurity http) throws Exception {
 		http.csrf().disable()
 		.authorizeRequests() 
-		.antMatchers("/","/js/**","/css/**", "/images/**" ,"/auth/**", "/test/**").permitAll() 
+		.antMatchers("/","/js/**","/css/**", "/images/**" ,"/auth/**", "/oauth/**").permitAll() 
 		.anyRequest().authenticated() 
 		.and()
 		.formLogin()
