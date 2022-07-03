@@ -12,6 +12,8 @@ import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -34,9 +36,12 @@ public class Reply {
 	
 	@ManyToOne
 	@JoinColumn(name = "userId")
+	@JsonIgnoreProperties({"password", "role", "email", "oauth"})
 	private User user;
+	
 	@ManyToOne
 	@JoinColumn(name = "boardId")
+	@JsonIgnoreProperties({"replys","user"})
 	private Board board;
 
 }

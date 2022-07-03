@@ -1,6 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="layout/header.jsp" %>
+<%@ page import="java.util.Date" %>
+<%@ page import="java.text.SimpleDateFormat" %>
+
+
 <c:set var="islogin" value=""/>
 <c:set var="isNotlogin" value="disabled"/>
   <!-- Page Content -->
@@ -8,7 +12,7 @@
 <section class="notice">
   <div class="page-title">
         <div class="container">
-            <h3>게시판</h3>
+            <h3 class="font-weight-bold">게시판</h3>
         </div>
     </div>
 
@@ -16,11 +20,11 @@
     <div id="board-search">
         <div class="container">
             <div class="search-window">
-                <form action="">
+                <form action="/" method="get">
                     <div class="search-wrap">
                         <label for="search" class="blind">공지사항 내용 검색</label>
-                        <input id="search" type="search" name="" placeholder="검색어를 입력해주세요." value="">
-                        <button type="submit" class="btn btn-dark">검색</button>
+                        <input id="search" type="search" name="q" placeholder="검색어를 입력해주세요." value="">
+                        <button type="submit" class="btn btn-dark"  >검색</button>
                     </div>
                 </form>
             </div>
@@ -58,7 +62,7 @@
 				                    <th>
 				                      <a onclick="showDetail(${board.id}, ${board.secret}, ${board.password})" >${board.title }</a>
 				                      <p>테스트</p>
-				                    </th>
+				                    </th>				                    
 				                    <td>${board.createTime}</td>
 				                </tr>
 				            </c:otherwise>    
@@ -66,11 +70,52 @@
 					</c:forEach>
                 </tbody>
             </table>
-            <button id="btn-write" class="btn btn-dark m-2 ${principal.username eq null ? isNotlogin : islogin}">글쓰기</button>
+            
+            <!-- 페이지네이션 -->
+            <div style="text-align:center">
+            	<div class="pagination">
+            
+	                <div style="width:35%; margin: 5px;">      
+	                    <c:if test="${boards.first ne true}">
+	                    	<a class="abutton" href="/?page=0">first</a>
+	                		<a class="abutton" href="/?page=${boards.number - 1 }">◀</a>
+	                	</c:if>
+	                    
+	                </div>
+	
+	                <div style="width:30%; margin: 5px;">
+	                	<c:forEach var="num" items="${pageNums }">
+	                		<c:choose>
+								<c:when test="${num eq boards.number}">
+									<span class=""><a href="/?page=${num}" style="font-weight: bold; font-size: 18px; ">${num + 1}</a></span>
+								</c:when>
+								<c:otherwise>
+									<span class=""><a href="/?page=${num}">${num + 1}</a></span>
+								</c:otherwise>
+							</c:choose>
+	                   </c:forEach>
+	                </div>
+	
+	                <div style="width:35%; margin: 5px;">
+	                	<c:if test="${boards.last ne true}">
+	                		<a class="abutton" href="/?page=${boards.number + 1 }">▶</a>
+	                		<a class="abutton" href="/?page=${boards.totalPages -1 }">last</a>
+	                	</c:if>
+	                </div>
+
+            	</div>  
+        	</div> 
+            <button id="btn-write" class="btn btn-dark m-2 float-right ${principal.username eq null ? isNotlogin : islogin}">글쓰기</button>
+            
     	</div>
     </div>
 </section>  
   
-    
-<script src="/js/board.js"></script>
+<script>
+function formatDate(createdate){
+	let data = createdate.tolSOString.substring(0,10);
+	return data;
+}
+</script>
+<script src="/js/board.js"></script>  
 <%@ include file="layout/footer.jsp" %>

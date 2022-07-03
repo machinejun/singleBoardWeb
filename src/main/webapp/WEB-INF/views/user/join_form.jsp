@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="../layout/header.jsp" %>
+<link href="/css/loginAndJoinStyle.css" rel="stylesheet">
 	<div class="main-container justify-content-center">
 		<h1>Join Page</h1>
 		<div class="main-wrap">
