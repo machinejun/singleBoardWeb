@@ -17,6 +17,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder.BCryptVersion;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 
 import com.singboardWeb.singleweb.auth.PricipalUserService;
@@ -32,8 +33,12 @@ public class SinglewebConfig extends WebSecurityConfigurerAdapter{
 	private PricipalUserService pricipalUserService;
 	
 	@Bean 
-	public BCryptPasswordEncoder encodePWD() {
-		return new BCryptPasswordEncoder();
+	public MyBCryptPasswordEncoder encodePWD() {
+		return new MyBCryptPasswordEncoder();
+	}
+	@Override
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+		auth.userDetailsService(pricipalUserService).passwordEncoder(encodePWD());
 	}
 	
 	@Bean
@@ -43,10 +48,7 @@ public class SinglewebConfig extends WebSecurityConfigurerAdapter{
 		return super.authenticationManagerBean();
 	}
 	
-	@Override
-	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.userDetailsService(pricipalUserService).passwordEncoder(encodePWD());
-	}
+	
 	
 
 	

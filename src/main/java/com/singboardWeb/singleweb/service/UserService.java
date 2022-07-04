@@ -39,12 +39,9 @@ public class UserService {
 	
 	@Transactional
 	public void saveKakaoUser(User user) {
-		try {
-			User userEntity = userRepository.findByUsername(user.getUsername()).orElseThrow(() -> {
-				return new NoSuchElementException();
-			});
-		}catch (NoSuchElementException e) {
-			userRepository.save(user);
+		User userEntity = userRepository.findByUsername(user.getUsername());
+		if(userEntity == null) {
+			saveUser(user);
 		}
 	}
 	

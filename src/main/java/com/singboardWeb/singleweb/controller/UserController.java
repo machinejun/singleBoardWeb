@@ -12,16 +12,15 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 
+import com.singboardWeb.singleweb.config.MyBCryptPasswordEncoder;
 import com.singboardWeb.singleweb.dto.KakaoProfileDto;
 import com.singboardWeb.singleweb.dto.KakaoTokenDto;
 import com.singboardWeb.singleweb.model.RoleType;
@@ -36,6 +35,9 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private MyBCryptPasswordEncoder encoder;
 	
 	@Autowired
 	private HttpSession httpSession;
@@ -110,19 +112,22 @@ public class UserController {
 	private void loginKakaoUser(KakaoProfileDto profileDto) {
 		User user = User.builder()
 				.username(profileDto.getProperties().getNickname() + "_" + profileDto.getId())
-				.password("1234")
 				.email(profileDto.getKakaoAccount().getEmail())
+				.password(kPassword)
 				.role(RoleType.User)
 				.oauth(RootType.Kakao)
 				.build();
 		System.out.println(user);
 		userService.saveKakaoUser(user);
 		System.out.println("DDDDDDD");
+		UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user.getUsername(), kPassword);
+		System.out.println(authenticationToken.toString());
 		Authentication authentication = authenticationManager
-				.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), "1234"));
+				.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), kPassword ));
 		System.out.println("ddddddddd");
 		SecurityContextHolder.getContext().setAuthentication(authentication);
 		System.out.println("aaaaaaaaaa");
+		
 		
 	}
 	
